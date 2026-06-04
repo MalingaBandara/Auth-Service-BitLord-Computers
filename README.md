@@ -8,6 +8,12 @@ The **Auth Service** is responsible for validating user credentials and securely
 
 [⬅️ Back to Main Repository](https://github.com/MalingaBandara/Bitlord-Computer-Parts)
 
+### 🔷 System Flow Diagram
+
+![Auth Service Architecture](./Diagram/Auth_Service_Diagram.png)
+
+---
+
 ## 🛠️ Tech Stack
 - **Language**: Java 17
 - **Framework**: Spring Boot 3.2 / Spring Security
