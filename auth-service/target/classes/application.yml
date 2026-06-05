@@ -1,51 +1,58 @@
 server:
-  port: 8084
+  port: 8084  # AUTH-SERVICE runs on port 8084
 
 spring:
   application:
-    name: AUTH-SERVICE
+    name: AUTH-SERVICE  # Service name used for Eureka registration and log identification
+
   datasource:
     url: jdbc:mysql://localhost:3307/bitlord_auth?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    # createDatabaseIfNotExist=true  — auto-creates the DB schema if it doesn't exist
+    # useSSL=false                   — disables SSL (local dev only, enable in production)
+    # allowPublicKeyRetrieval=true   — required for MySQL 8+ when SSL is off
+    # serverTimezone=UTC             — forces UTC to avoid timezone mismatch issues
     username: root
     password: bitlord123
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver  # MySQL 8+ JDBC driver
+
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: update  # Auto-updates DB schema on startup without dropping existing data
+    show-sql: true  # Logs all SQL queries to console — useful for debugging
     properties:
       hibernate:
-        format_sql: true
+        format_sql: true  # Pretty-prints SQL logs for easier reading
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/  # Eureka server address for service registration
   instance:
-    prefer-ip-address: true
+    prefer-ip-address: true  # Registers with IP instead of hostname — avoids DNS resolution issues in Docker
 
 management:
   endpoints:
     web:
       exposure:
-        include: health, info, prometheus, metrics
+        include: health, info, prometheus, metrics  # Exposes these actuator endpoints over HTTP
   metrics:
     export:
       prometheus:
-        enabled: true
+        enabled: true  # Enables Prometheus metrics scraping at /actuator/prometheus
   tracing:
     sampling:
-      probability: 1.0
+      probability: 1.0  # Traces 100% of requests — use a lower value (e.g. 0.1) in production
   zipkin:
     tracing:
-      endpoint: http://localhost:9412/api/v2/spans
+      endpoint: http://localhost:9412/api/v2/spans  # Zipkin server endpoint for distributed trace reporting
 
 app:
   jwt:
     # Please override this in production via environment variables
     secret: ${JWT_SECRET:4B697368616E5365637265744B6579466F724269746C6F726441707032303236}
-    access-token-expiry: 900
-    refresh-token-expiry: 604800
+    # Reads JWT secret from JWT_SECRET env variable — falls back to hardcoded value if not set
+    access-token-expiry: 900      # Access token lifespan in seconds (900s = 15 minutes)
+    refresh-token-expiry: 604800  # Refresh token lifespan in seconds (604800s = 7 days)
 
 # docker exec -it <container_name> mysql -u root -p
 #  docker exec -it bitlord-computer-parts-mysql-auth-1 mysql -u root -p

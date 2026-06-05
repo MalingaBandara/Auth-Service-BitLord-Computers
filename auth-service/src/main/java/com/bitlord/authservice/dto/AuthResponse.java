@@ -2,13 +2,16 @@ package com.bitlord.authservice.dto;
 
 /**
  * DTO for authentication response.
+ *
+ * This class is used to send authentication-related data
+ * back to the client after successful login or token generation.
  */
 public class AuthResponse {
 
-    private String accessToken;
-    private String refreshToken;
+    private String accessToken; // JWT access token used for authorizing API requests
+    private String refreshToken;  // Refresh token used to generate a new access token when it expires
     private Long userId;
-    private String role;
+    private String role;  // Role of the authenticated user (e.g., ADMIN, USER)
 
     public AuthResponse(String accessToken, String refreshToken, Long userId, String role) {
         this.accessToken = accessToken;
